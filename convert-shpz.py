@@ -56,7 +56,6 @@ if __name__ == '__main__':
             sys.exit()
         else:
             print('PROCESSING:\n- {}'.format('\n- '.join(zip_shp_file_paths)))
-        #print(zip_shp_file_paths)
         count_shapefile_convert_success = 0
         count_shapefile_convert_skipped = 0
         count_shapefile_convert_error = 0
@@ -73,23 +72,10 @@ if __name__ == '__main__':
                 # process if there is only 1 shp file extracted from the zip
                 if shp_extracted_path and len(shp_extracted_path) == 1:
                     shp_read = shapefile.Reader(shp_extracted_path[0])
-                    #print(shp_extracted_path[0])
-                    #print(shp_read)
-                    #print(shp_read.fields)
-                    #print(shp_read.shapeType)
                     output_shp_filename = os.path.basename(shp_extracted_path[0])
                     if shp_read.shapeType in SHP_MAP_Z_TO_NORMAL.keys():
-                        # convert shapefile to geojson
-                        #geojson = shp_read.__geo_interface__
-                        #print(geojson)
-                        #print(geojson['type'])
                         print('CONVERTING: "{}" shapefile from Z type to normal shapefile'.format(output_shp_filename))
-                        #output_shp_filename = '{}_{}'.format('output', os.path.basename(shp_extracted_path[0]))
                         shp_write = shapefile.Writer(os.path.join(temp_output_dir, output_shp_filename))
-                        #shp_write = shapefile.Writer(os.path.join(temp_extract_dir, output_shp_filename))
-                        # convert z shapefile to non z type
-                        #print(shp_write.shapeType)
-                        #print(SHP_MAP_Z_TO_NORMAL.keys())
                         if shp_read.shapeType == SHP_POINTZ:
                             shp_write.shapeType = SHP_MAP_Z_TO_NORMAL[SHP_POINTZ]
                         elif shp_read.shapeType == SHP_POLYLINEZ:
@@ -102,7 +88,6 @@ if __name__ == '__main__':
                         shp_write.fields = shp_read.fields[1:]
                         for shp_record in shp_read.iterShapeRecords():
                             # also update the shapeType of each shape record
-                            #print(shp_record.shape.shapeType)
                             shp_record.shape.shapeType = shp_write.shapeType
                             shp_write.record(*shp_record.record)
                             shp_write.shape(shp_record.shape)
@@ -114,7 +99,6 @@ if __name__ == '__main__':
                         extracted_dbf = glob.glob(os.path.join(temp_extract_dir, '*.dbf'))
                         extracted_shx = glob.glob(os.path.join(temp_extract_dir, '*.shx'))
                         files_to_copy = list(set(extracted_all) - set(extracted_shp) - set(extracted_dbf) - set(extracted_shx))
-                        #print(files_to_copy)
                         for file_to_copy in files_to_copy:
                             shutil.copy2(file_to_copy, temp_output_dir)
                         # finally zip the output files
