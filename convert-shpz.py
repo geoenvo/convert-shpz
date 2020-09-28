@@ -44,7 +44,7 @@ if __name__ == '__main__':
         #temp_dir = 'd:\\output'
         #input_zip_shp_path = 'd:\\pyshp\\z shps\\'
         #input_zip_shp_path = 'd:\\pyshp\\z shps\\Rawan_Bencana_Gempa_Bumi_AR.zip'
-        output_dir = 'result' # directory to save the conversion result zip file
+        output_dir = 'converted' # directory to save the conversion result zip file
         # process single zip shp file or a directory containing multiple zip shp files
         if os.path.isfile(input_zip_shp_path) and input_zip_shp_path.lower().endswith('zip'):
             zip_shp_file_paths.append(input_zip_shp_path)
