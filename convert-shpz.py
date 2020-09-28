@@ -87,11 +87,6 @@ if __name__ == '__main__':
                         #output_shp_filename = '{}_{}'.format('output', os.path.basename(shp_extracted_path[0]))
                         shp_write = shapefile.Writer(os.path.join(temp_output_dir, output_shp_filename))
                         #shp_write = shapefile.Writer(os.path.join(temp_extract_dir, output_shp_filename))
-                        # copy shapefile
-                        shp_write.fields = shp_read.fields[1:]
-                        for shp_record in shp_read.iterShapeRecords():
-                            shp_write.record(*shp_record.record)
-                            shp_write.shape(shp_record.shape)
                         # convert z shapefile to non z type
                         #print(shp_write.shapeType)
                         #print(SHP_MAP_Z_TO_NORMAL.keys())
@@ -103,6 +98,14 @@ if __name__ == '__main__':
                             shp_write.shapeType = SHP_MAP_Z_TO_NORMAL[SHP_POLYGONZ]
                         elif shp_read.shapeType == SHP_MULTIPOINTZ:
                             shp_write.shapeType = SHP_MAP_Z_TO_NORMAL[SHP_MULTIPOINTZ]
+                        # copy shapefile
+                        shp_write.fields = shp_read.fields[1:]
+                        for shp_record in shp_read.iterShapeRecords():
+                            # also update the shapeType of each shape record
+                            #print(shp_record.shape.shapeType)
+                            shp_record.shape.shapeType = shp_write.shapeType
+                            shp_write.record(*shp_record.record)
+                            shp_write.shape(shp_record.shape)
                         shp_write.close()
                         shp_read.close()
                         # copy all extracted files except shp, shx, and dbf to output directory
