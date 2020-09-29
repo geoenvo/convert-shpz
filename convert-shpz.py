@@ -12,7 +12,7 @@ import argparse
 import shapefile
 
 
-# pyshp constants for shapefiles with z information
+# pyshp constants for shapefiles with z/m information
 SHP_POINT = 1
 SHP_POLYLINE = 3
 SHP_POLYGON = 5
@@ -21,18 +21,26 @@ SHP_POINTZ = 11
 SHP_POLYLINEZ = 13
 SHP_POLYGONZ = 15
 SHP_MULTIPOINTZ = 18
+SHP_POINTM = 21
+SHP_POLYLINEM = 23
+SHP_POLYGONM = 25
+SHP_MULTIPOINTM = 28
 SHP_MAP_Z_TO_NORMAL = {
     SHP_POINTZ: SHP_POINT,
     SHP_POLYLINEZ: SHP_POLYLINE,
     SHP_POLYGONZ: SHP_POLYGON,
-    SHP_MULTIPOINTZ: SHP_MULTIPOINT
+    SHP_MULTIPOINTZ: SHP_MULTIPOINT,
+    SHP_POINTM: SHP_POINT,
+    SHP_POLYLINEM: SHP_POLYLINE,
+    SHP_POLYGONM: SHP_POLYGON,
+    SHP_MULTIPOINTM: SHP_MULTIPOINT
 }
 
 
 if __name__ == '__main__':
     try:
         parser = argparse.ArgumentParser(
-            description='Convert Z shapefiles (PointZ, PolyLineZ, PolygonZ, MultiPointZ) to normal shapefiles without Z-values',
+            description='Convert Z/M shapefiles (PointZ/M, PolyLineZ/M, PolygonZ/M, MultiPointZ/M) to normal shapefiles without Z/M-values',
             epilog='Refer to https://github.com/geoenvo/convert-shpz for more details')
         parser.add_argument('-i', '--input', help='Path to a zip shapefile or a directory containing them', type=str, nargs='?', default='.')
         parser.add_argument('-o', '--output', help='Path to output directory for the converted shapefiles', type=str, nargs='?', default='output')
@@ -74,7 +82,7 @@ if __name__ == '__main__':
                     shp_read = shapefile.Reader(shp_extracted_path[0])
                     output_shp_filename = os.path.basename(shp_extracted_path[0])
                     if shp_read.shapeType in SHP_MAP_Z_TO_NORMAL.keys():
-                        print('CONVERTING: "{}" shapefile from Z type to normal shapefile'.format(output_shp_filename))
+                        print('CONVERTING: "{}" shapefile from Z/M type to normal shapefile'.format(output_shp_filename))
                         shp_write = shapefile.Writer(os.path.join(temp_output_dir, output_shp_filename))
                         if shp_read.shapeType == SHP_POINTZ:
                             shp_write.shapeType = SHP_MAP_Z_TO_NORMAL[SHP_POINTZ]
@@ -84,6 +92,14 @@ if __name__ == '__main__':
                             shp_write.shapeType = SHP_MAP_Z_TO_NORMAL[SHP_POLYGONZ]
                         elif shp_read.shapeType == SHP_MULTIPOINTZ:
                             shp_write.shapeType = SHP_MAP_Z_TO_NORMAL[SHP_MULTIPOINTZ]
+                        elif shp_read.shapeType == SHP_POINTM:
+                            shp_write.shapeType = SHP_MAP_Z_TO_NORMAL[SHP_POINTM]
+                        elif shp_read.shapeType == SHP_POLYLINEM:
+                            shp_write.shapeType = SHP_MAP_Z_TO_NORMAL[SHP_POLYLINEM]
+                        elif shp_read.shapeType == SHP_POLYGONM:
+                            shp_write.shapeType = SHP_MAP_Z_TO_NORMAL[SHP_POLYGONM]
+                        elif shp_read.shapeType == SHP_MULTIPOINTM:
+                            shp_write.shapeType = SHP_MAP_Z_TO_NORMAL[SHP_MULTIPOINTM]
                         # copy shapefile
                         shp_write.fields = shp_read.fields[1:]
                         for shp_record in shp_read.iterShapeRecords():
@@ -114,10 +130,10 @@ if __name__ == '__main__':
                                 for file_to_zip in files_to_zip:
                                     zip_output.write(file_to_zip, os.path.basename(file_to_zip))
                             count_shapefile_convert_success += 1
-                            print('SUCCESS: converted "{}" shapefile from Z type to normal shapefile'.format(output_shp_filename))
+                            print('SUCCESS: converted "{}" shapefile from Z/M type to normal shapefile'.format(output_shp_filename))
                     else:
                         count_shapefile_convert_skipped += 1
-                        print('SKIPPING: "{}" shapefile is not a Z type'.format(output_shp_filename))
+                        print('SKIPPING: "{}" shapefile is not a Z/M type'.format(output_shp_filename))
                 else:
                     count_shapefile_convert_error += 1
                     print('ERROR: found more than 1 extracted .shp file in "{}"'.format(temp_extract_dir))

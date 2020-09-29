@@ -2,7 +2,7 @@
 
 
 ## How to run
-This script will convert Z shapefiles (PointZ, PolyLineZ, PolygonZ, MultiPointZ) to normal shapefiles without Z-values.
+This script will convert Z/M shapefiles (PointZ/M, PolyLineZ/M, PolygonZ/M, MultiPointZ/M) to normal shapefiles without Z/M-values.
 
 The input shapefile(s) to be converted must be zipped.
 
@@ -14,7 +14,7 @@ pip install requirements.txt
 python convert-shpz.py -h
 usage: convert-shpz.py [-h] [-i [INPUT]] [-o [OUTPUT]]
 
-Convert Z shapefiles (PointZ, PolyLineZ, PolygonZ, MultiPointZ) to normal shapefiles without Z-values
+Convert Z/M shapefiles (PointZ/M, PolyLineZ/M, PolygonZ/M, MultiPointZ/M) to normal shapefiles without Z/M-values
 
 optional arguments:
   -h, --help            show this help message and exit
